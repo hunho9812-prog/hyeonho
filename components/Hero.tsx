@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import CourseModal from "./CourseModal";
 
 const roles = ["방구석 청년"];
 
@@ -8,6 +9,7 @@ export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayed, setDisplayed] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isCourseOpen, setIsCourseOpen] = useState(false);
 
   useEffect(() => {
     const current = roles[roleIndex];
@@ -87,18 +89,24 @@ export default function Hero() {
           className="animate-fade-in-up flex flex-col sm:flex-row gap-4 justify-center"
           style={{ animationDelay: "0.8s", opacity: 0 }}
         >
-          <div
-            className="px-8 py-3 rounded-full font-medium"
+          <button
+            onClick={() => setIsCourseOpen(true)}
+            className="px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 cursor-pointer"
             style={{
               background: "linear-gradient(135deg, #7c3aed, #2563eb)",
               boxShadow: "0 4px 20px rgba(124, 58, 237, 0.4)",
             }}
           >
             ⚡ 에너지시스템 공학
-          </div>
-          <div className="px-8 py-3 rounded-full font-medium glass-card">
+          </button>
+          <a
+            href="https://claude.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 glass-card"
+          >
             🤖 클로드 AI
-          </div>
+          </a>
         </div>
 
         {/* Scroll indicator */}
@@ -117,6 +125,8 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      <CourseModal isOpen={isCourseOpen} onClose={() => setIsCourseOpen(false)} />
     </section>
   );
 }
