@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const navLinks = [
   { href: "#about", label: "소개" },
@@ -34,7 +35,7 @@ export default function Navigation() {
         >
           현호
         </a>
-        <ul className="flex gap-8">
+        <ul className="flex gap-8 items-center">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
@@ -45,6 +46,18 @@ export default function Navigation() {
               </a>
             </li>
           ))}
+          <li>
+            <Link
+              href="/timetable"
+              className="text-sm px-4 py-1.5 rounded-full transition-all duration-200 hover:scale-105"
+              style={{
+                background: "linear-gradient(135deg, #7c3aed, #2563eb)",
+                color: "white",
+              }}
+            >
+              📅 시간표
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
