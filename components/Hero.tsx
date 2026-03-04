@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const roles = ["개발자", "문제 해결사", "꿈을 코딩하는 사람"];
+const roles = ["방구석 청년"];
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -78,33 +78,27 @@ export default function Hero() {
           style={{ animationDelay: "0.6s", opacity: 0 }}
         >
           <p className="text-gray-400 text-lg max-w-xl mx-auto leading-relaxed">
-            좋은 코드로 더 나은 세상을 만들어가고 있습니다.
-            <br />
-            새로운 기술을 탐구하고 창의적인 솔루션을 만드는 것을 좋아합니다.
+            사이트를 잘 만들고 싶은 청년입니다.
           </p>
         </div>
 
-        {/* CTA Buttons */}
+        {/* Interest Tags */}
         <div
           className="animate-fade-in-up flex flex-col sm:flex-row gap-4 justify-center"
           style={{ animationDelay: "0.8s", opacity: 0 }}
         >
-          <a
-            href="#projects"
-            className="px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105"
+          <div
+            className="px-8 py-3 rounded-full font-medium"
             style={{
               background: "linear-gradient(135deg, #7c3aed, #2563eb)",
               boxShadow: "0 4px 20px rgba(124, 58, 237, 0.4)",
             }}
           >
-            프로젝트 보기
-          </a>
-          <a
-            href="#contact"
-            className="px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 glass-card"
-          >
-            연락하기
-          </a>
+            ⚡ 에너지시스템 공학
+          </div>
+          <div className="px-8 py-3 rounded-full font-medium glass-card">
+            🤖 클로드 AI
+          </div>
         </div>
 
         {/* Scroll indicator */}
