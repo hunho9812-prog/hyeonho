@@ -92,8 +92,8 @@ const siteLinks: SiteLink[] = [
 
 export default function Features() {
   return (
-    <section id="features" className="pt-4 pb-24 px-6">
-      <div className="max-w-5xl w-full mx-auto">
+    <section id="features" className="pt-4 pb-24 px-6 flex flex-col items-center">
+      <div className="w-full" style={{ maxWidth: "64rem" }}>
 
         {/* ── 기능 섹션 ── */}
         <div className="text-center mb-14">

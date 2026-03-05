@@ -36,9 +36,9 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="flex items-center justify-center px-6 pt-28 pb-8"
+      className="flex flex-col items-center justify-center px-6 pt-28 pb-8"
     >
-      <div className="max-w-5xl mx-auto text-center">
+      <div className="w-full text-center" style={{ maxWidth: "64rem" }}>
         {/* Avatar */}
         <div className="mb-8 flex justify-center">
           <div
