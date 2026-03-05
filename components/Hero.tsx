@@ -36,7 +36,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center px-6 pt-20"
+      className="flex items-center justify-center px-6 pt-28 pb-8"
     >
       <div className="max-w-5xl mx-auto text-center">
         {/* Avatar */}
@@ -111,7 +111,7 @@ export default function Hero() {
 
         {/* Scroll indicator */}
         <div
-          className="animate-fade-in-up mt-20"
+          className="animate-fade-in-up mt-10"
           style={{ animationDelay: "1.2s", opacity: 0 }}
         >
           <div className="flex flex-col items-center gap-2 text-gray-500">
