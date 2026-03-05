@@ -1,7 +1,7 @@
 export default function Contact() {
   return (
-    <section id="contact" className="py-32 px-6">
-      <div className="max-w-5xl mx-auto">
+    <section id="contact" className="py-32 px-6 flex flex-col items-center">
+      <div className="w-full" style={{ maxWidth: "64rem" }}>
         <div className="glass-card rounded-3xl p-12 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">
             함께 만들어요 🤝
