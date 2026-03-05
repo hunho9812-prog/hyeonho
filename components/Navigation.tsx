@@ -5,7 +5,6 @@ import Link from "next/link";
 
 const navLinks = [
   { href: "#features", label: "기능" },
-  { href: "#contact", label: "연락처" },
 ];
 
 export default function Navigation() {
