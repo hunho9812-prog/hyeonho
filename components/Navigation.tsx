@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const navLinks = [
-  { href: "#about", label: "소개" },
+  { href: "#features", label: "기능" },
   { href: "#contact", label: "연락처" },
 ];
 

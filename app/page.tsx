@@ -1,5 +1,5 @@
 import Hero from "@/components/Hero";
-import About from "@/components/About";
+import Features from "@/components/Features";
 import Contact from "@/components/Contact";
 import Navigation from "@/components/Navigation";
 import Background from "@/components/Background";
@@ -10,7 +10,7 @@ export default function Home() {
       <Background />
       <Navigation />
       <Hero />
-      <About />
+      <Features />
       <Contact />
     </main>
   );
