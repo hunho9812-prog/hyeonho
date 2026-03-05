@@ -23,30 +23,39 @@ interface SiteLink {
 const features: FeatureCard[] = [
   {
     emoji: "📅",
-    title: "시간표",
+    title: "수업 시간표",
     description:
-      "강의 시간을 자유롭게 입력해서 나만의 시간표를 만들 수 있습니다. 11시 45분처럼 분 단위까지 정확하게 설정할 수 있습니다.",
+      "주간 시간표를 만들고 수업을 블록으로 입력하세요. 클릭 한 번으로 수업을 추가·수정할 수 있습니다.",
     tags: ["시간 관리", "학사 일정"],
     href: "/timetable",
     gradient: { from: "#7c3aed", to: "#2563eb", accent: "rgba(124,58,237,0.25)" },
   },
   {
-    emoji: "✅",
-    title: "과제 체크리스트",
+    emoji: "📆",
+    title: "달력",
     description:
-      "해야 할 과제와 마감일을 정리하고 완료 여부를 체크할 수 있습니다. 놓치는 과제 없이 학업을 관리하세요.",
-    tags: ["할 일 관리", "마감 관리"],
-    comingSoon: true,
+      "월별 캘린더로 일정을 한눈에 확인하고 날짜별로 메모를 기록하세요. 색상으로 일정을 구분할 수 있습니다.",
+    tags: ["일정 관리", "월간 계획"],
+    href: "/calendar",
+    gradient: { from: "#0891b2", to: "#0e7490", accent: "rgba(8,145,178,0.25)" },
+  },
+  {
+    emoji: "✅",
+    title: "TO DO LIST",
+    description:
+      "오늘의 할 일을 계획하고 체크하세요. Brain Dump, Big 3 우선순위, 타임박스로 하루를 알차게 채워보세요.",
+    tags: ["할 일 관리", "일일 플래너"],
+    href: "/todo",
     gradient: { from: "#059669", to: "#0891b2", accent: "rgba(5,150,105,0.2)" },
   },
   {
-    emoji: "📊",
-    title: "성적 계산기",
+    emoji: "💭",
+    title: "나의 생각",
     description:
-      "중간·기말·과제 비중을 입력하면 예상 학점과 최종 성적을 자동으로 계산해드립니다.",
-    tags: ["성적 관리", "학점 계산"],
-    comingSoon: true,
-    gradient: { from: "#d97706", to: "#dc2626", accent: "rgba(217,119,6,0.2)" },
+      "블로그처럼 생각과 아이디어를 기록하세요. 제목과 본문으로 글을 작성하고 저장된 글을 목록으로 관리할 수 있습니다.",
+    tags: ["노트 작성", "아이디어 기록"],
+    href: "/thoughts",
+    gradient: { from: "#7c3aed", to: "#db2777", accent: "rgba(124,58,237,0.2)" },
   },
   {
     emoji: "📝",
@@ -55,7 +64,7 @@ const features: FeatureCard[] = [
       "수업별로 노트를 작성하고 정리할 수 있습니다. 과목마다 별도 공간에서 깔끔하게 메모하세요.",
     tags: ["노트 작성", "복습"],
     comingSoon: true,
-    gradient: { from: "#7c3aed", to: "#db2777", accent: "rgba(124,58,237,0.2)" },
+    gradient: { from: "#6366f1", to: "#8b5cf6", accent: "rgba(99,102,241,0.2)" },
   },
 ];
 
@@ -106,10 +115,14 @@ export default function Features() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-24">
-          {features.map((feat) => (
+          {features.map((feat, idx) => (
             <div
               key={feat.title}
-              className="rounded-2xl p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+              className={`rounded-2xl p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ${
+                idx === features.length - 1 && features.length % 2 !== 0
+                  ? "md:col-span-2 md:max-w-sm md:mx-auto md:w-full"
+                  : ""
+              }`}
               style={{
                 background: "rgba(15,15,25,0.7)",
                 border: "1px solid rgba(255,255,255,0.08)",
@@ -119,7 +132,10 @@ export default function Features() {
               {/* Icon */}
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6"
-                style={{ background: feat.gradient.accent, border: `1px solid ${feat.gradient.accent}` }}
+                style={{
+                  background: feat.gradient.accent,
+                  border: `1px solid ${feat.gradient.accent}`,
+                }}
               >
                 {feat.emoji}
               </div>
