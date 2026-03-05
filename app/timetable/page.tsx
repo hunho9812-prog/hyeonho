@@ -5,10 +5,12 @@ import Link from "next/link";
 import Background from "@/components/Background";
 
 const DAYS = ["월", "화", "수", "목", "금"];
-const PERIODS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const PERIODS = Array.from({ length: 20 }, (_, i) => i + 1);
 const TIMES = [
-  "09:00", "10:00", "11:00", "12:00", "13:00",
-  "14:00", "15:00", "16:00", "17:00", "18:00",
+  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+  "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+  "18:00", "18:30",
 ];
 
 const COLORS = [
@@ -110,8 +112,9 @@ export default function TimetablePage() {
                 borderColor: "rgba(255,255,255,0.06)",
                 cursor: "pointer",
                 verticalAlign: "top",
-                padding: "8px 10px",
+                padding: "6px 10px 6px 14px",
                 position: "relative",
+                overflow: "hidden",
               }}
               className="border hover:brightness-125 transition-all"
             >
@@ -135,7 +138,7 @@ export default function TimetablePage() {
             <td
               key={key}
               onClick={() => openAdd(dIdx, period)}
-              style={{ borderColor: "rgba(255,255,255,0.06)", cursor: "pointer" }}
+              style={{ borderColor: "rgba(255,255,255,0.06)", cursor: "pointer", height: "40px", maxHeight: "40px" }}
               className="border hover:bg-white/5 transition-colors"
             />
           );
@@ -143,7 +146,7 @@ export default function TimetablePage() {
       }
 
       return (
-        <tr key={period} style={{ height: "56px" }}>
+        <tr key={period} style={{ height: "40px", maxHeight: "40px" }}>
           {/* Period label */}
           <td
             className="border text-center select-none"
@@ -311,18 +314,18 @@ export default function TimetablePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 mb-1 block">시작 교시</label>
+                  <label className="text-xs text-gray-400 mb-1 block">시작</label>
                   <select
                     value={modal.startPeriod ?? 1}
                     onChange={(e) => setModal({ ...modal, startPeriod: Number(e.target.value) })}
                     className="w-full rounded-xl px-3 py-2.5 text-sm text-white outline-none"
                     style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}
                   >
-                    {PERIODS.map((p) => <option key={p} value={p}>{p}교시</option>)}
+                    {PERIODS.map((p) => <option key={p} value={p}>{TIMES[p - 1]}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 mb-1 block">종료 교시</label>
+                  <label className="text-xs text-gray-400 mb-1 block">종료</label>
                   <select
                     value={modal.endPeriod ?? 1}
                     onChange={(e) => setModal({ ...modal, endPeriod: Number(e.target.value) })}
@@ -330,7 +333,7 @@ export default function TimetablePage() {
                     style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}
                   >
                     {PERIODS.filter((p) => p >= (modal.startPeriod ?? 1)).map((p) => (
-                      <option key={p} value={p}>{p}교시</option>
+                      <option key={p} value={p}>{TIMES[p - 1]}</option>
                     ))}
                   </select>
                 </div>
