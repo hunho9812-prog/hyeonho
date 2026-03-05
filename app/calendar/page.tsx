@@ -12,12 +12,63 @@ interface CalendarEvent {
 }
 
 const EVENT_COLORS = ["#a78bfa", "#60a5fa", "#34d399", "#f87171", "#fbbf24", "#fb923c"];
-
 const MONTH_NAMES = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
 const DAY_NAMES = ["일","월","화","수","목","금","토"];
 
+// ── 대한민국 공휴일 ──────────────────────────────────────────
+// "MM-DD"  → 매년 반복 (양력 고정)
+// "YYYY-MM-DD" → 특정 연도
+const HOLIDAYS: Record<string, string> = {
+  // 양력 고정
+  "01-01": "신정",
+  "03-01": "삼일절",
+  "05-01": "근로자의 날",
+  "05-05": "어린이날",
+  "06-06": "현충일",
+  "08-15": "광복절",
+  "10-03": "개천절",
+  "10-09": "한글날",
+  "12-25": "크리스마스",
+  // 2025
+  "2025-01-28": "설날",
+  "2025-01-29": "설날 연휴",
+  "2025-01-30": "설날 연휴",
+  "2025-05-06": "어린이날 대체",
+  "2025-05-15": "부처님오신날",
+  "2025-10-05": "추석 연휴",
+  "2025-10-06": "추석 연휴",
+  "2025-10-07": "추석",
+  "2025-10-08": "추석 연휴",
+  // 2026
+  "2026-02-17": "설날 연휴",
+  "2026-02-18": "설날",
+  "2026-02-19": "설날 연휴",
+  "2026-02-20": "설날 대체",
+  "2026-03-02": "삼일절 대체",
+  "2026-05-24": "부처님오신날",
+  "2026-09-24": "추석 연휴",
+  "2026-09-25": "추석",
+  "2026-09-26": "추석 연휴",
+};
+
+// ── 시험 기간 ────────────────────────────────────────────────
+const EXAM_PERIODS = [
+  { start: "2026-04-13", end: "2026-04-17", label: "중간고사", bg: "rgba(251,146,60,0.18)", border: "rgba(251,146,60,0.5)", text: "#fb923c" },
+  { start: "2026-06-15", end: "2026-06-19", label: "기말고사", bg: "rgba(251,113,133,0.18)", border: "rgba(251,113,133,0.5)", text: "#f87171" },
+];
+
 function dateStr(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+function getHoliday(ds: string): string | null {
+  if (HOLIDAYS[ds]) return HOLIDAYS[ds];
+  const mmdd = ds.slice(5); // "MM-DD"
+  return HOLIDAYS[mmdd] ?? null;
+}
+
+function getExamPeriod(ds: string) {
+  return EXAM_PERIODS.find((ep) => ds >= ep.start && ds <= ep.end) ?? null;
 }
 
 export default function CalendarPage() {
@@ -62,6 +113,8 @@ export default function CalendarPage() {
   };
 
   const selectedEvents = events.filter((e) => e.date === selected);
+  const selectedHoliday = getHoliday(selected);
+  const selectedExam = getExamPeriod(selected);
 
   const selectedObj = new Date(selected + "T00:00:00");
   const displaySelected = `${selectedObj.getMonth() + 1}월 ${selectedObj.getDate()}일 (${DAY_NAMES[selectedObj.getDay()]})`;
@@ -71,11 +124,27 @@ export default function CalendarPage() {
       <Background />
       <div className="relative z-10 max-w-5xl mx-auto px-4 pt-24 pb-16">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors mb-2 inline-block">
             ← 홈으로
           </Link>
           <h1 className="text-3xl font-bold text-white">📆 달력</h1>
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap gap-3 mb-5 text-xs">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(251,146,60,0.4)", border: "1px solid rgba(251,146,60,0.7)" }} />
+            <span className="text-orange-400">중간고사 (4/13~17)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(251,113,133,0.4)", border: "1px solid rgba(251,113,133,0.7)" }} />
+            <span className="text-red-400">기말고사 (6/15~19)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full" style={{ background: "#f87171" }} />
+            <span className="text-gray-400">공휴일</span>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -129,48 +198,74 @@ export default function CalendarPage() {
                 const isToday = ds === todayStr;
                 const isSel = ds === selected;
                 const dow = (firstDay + i) % 7;
+                const holiday = getHoliday(ds);
+                const exam = getExamPeriod(ds);
+                const isHoliday = !!holiday || dow === 0;
+
+                // Background layering: selected > exam > today > default
+                let bg = "transparent";
+                let border = "1px solid transparent";
+                if (isSel) {
+                  bg = "rgba(124,58,237,0.35)";
+                  border = "1px solid rgba(124,58,237,0.7)";
+                } else if (exam) {
+                  bg = exam.bg;
+                  border = `1px solid ${exam.border}`;
+                } else if (isToday) {
+                  bg = "rgba(124,58,237,0.12)";
+                  border = "1px solid rgba(124,58,237,0.3)";
+                }
+
                 return (
                   <button
                     key={d}
                     onClick={() => setSelected(ds)}
-                    style={{
-                      minHeight: 60,
-                      background: isSel
-                        ? "rgba(124,58,237,0.3)"
-                        : isToday
-                        ? "rgba(124,58,237,0.12)"
-                        : "transparent",
-                      border: isSel
-                        ? "1px solid rgba(124,58,237,0.6)"
-                        : isToday
-                        ? "1px solid rgba(124,58,237,0.3)"
-                        : "1px solid transparent",
-                      touchAction: "manipulation",
-                    }}
-                    className="rounded-xl p-1 flex flex-col items-center transition-all active:scale-95 hover:bg-white/5"
+                    style={{ minHeight: 64, background: bg, border, touchAction: "manipulation" }}
+                    className="rounded-xl p-1 flex flex-col items-center transition-all active:scale-95 hover:brightness-125"
                   >
                     <span
-                      className={`text-sm font-medium ${
-                        isToday
-                          ? "text-purple-400"
-                          : dow === 0
-                          ? "text-red-400"
+                      className="text-sm font-semibold"
+                      style={{
+                        color: isToday
+                          ? "#a78bfa"
+                          : isHoliday
+                          ? "#f87171"
                           : dow === 6
-                          ? "text-blue-400"
-                          : "text-gray-300"
-                      }`}
+                          ? "#93c5fd"
+                          : "#d1d5db",
+                      }}
                     >
                       {d}
                     </span>
-                    <div className="flex flex-wrap gap-0.5 justify-center mt-1">
-                      {dayEvents.slice(0, 3).map((ev) => (
-                        <div
-                          key={ev.id}
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ background: ev.color }}
-                        />
-                      ))}
-                    </div>
+
+                    {/* Holiday name */}
+                    {holiday && (
+                      <span
+                        className="text-center leading-tight mt-0.5"
+                        style={{ fontSize: 9, color: "#fca5a5", lineHeight: 1.2 }}
+                      >
+                        {holiday}
+                      </span>
+                    )}
+
+                    {/* Exam label (only on first day of period) */}
+                    {exam && ds === exam.start && (
+                      <span
+                        className="rounded px-0.5 mt-0.5"
+                        style={{ fontSize: 8, background: exam.bg, color: exam.text, border: `1px solid ${exam.border}` }}
+                      >
+                        {exam.label}
+                      </span>
+                    )}
+
+                    {/* Event dots */}
+                    {dayEvents.length > 0 && (
+                      <div className="flex flex-wrap gap-0.5 justify-center mt-0.5">
+                        {dayEvents.slice(0, 3).map((ev) => (
+                          <div key={ev.id} className="w-1.5 h-1.5 rounded-full" style={{ background: ev.color }} />
+                        ))}
+                      </div>
+                    )}
                   </button>
                 );
               })}
@@ -182,7 +277,30 @@ export default function CalendarPage() {
             className="rounded-2xl p-5 flex flex-col min-h-[400px]"
             style={{ background: "rgba(10,10,15,0.7)", border: "1px solid rgba(255,255,255,0.07)" }}
           >
-            <h3 className="text-base font-bold text-white mb-4">{displaySelected}</h3>
+            {/* Date title */}
+            <h3 className="text-base font-bold text-white mb-1">{displaySelected}</h3>
+
+            {/* Holiday badge */}
+            {selectedHoliday && (
+              <div
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium mb-2 self-start"
+                style={{ background: "rgba(248,113,113,0.15)", border: "1px solid rgba(248,113,113,0.35)", color: "#fca5a5" }}
+              >
+                🎌 {selectedHoliday}
+              </div>
+            )}
+
+            {/* Exam period badge */}
+            {selectedExam && (
+              <div
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium mb-2 self-start"
+                style={{ background: selectedExam.bg, border: `1px solid ${selectedExam.border}`, color: selectedExam.text }}
+              >
+                📝 {selectedExam.label} 기간
+              </div>
+            )}
+
+            <div className="border-t border-white/5 mt-1 mb-3" />
 
             {/* Add event input */}
             <input
@@ -239,10 +357,7 @@ export default function CalendarPage() {
                   <div
                     key={ev.id}
                     className="flex items-start gap-2 rounded-xl px-3 py-2.5"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      borderLeft: `3px solid ${ev.color}`,
-                    }}
+                    style={{ background: "rgba(255,255,255,0.04)", borderLeft: `3px solid ${ev.color}` }}
                   >
                     <span className="flex-1 text-sm text-gray-200 break-all">{ev.text}</span>
                     <button

@@ -57,15 +57,6 @@ const features: FeatureCard[] = [
     href: "/thoughts",
     gradient: { from: "#7c3aed", to: "#db2777", accent: "rgba(124,58,237,0.2)" },
   },
-  {
-    emoji: "📝",
-    title: "강의 노트",
-    description:
-      "수업별로 노트를 작성하고 정리할 수 있습니다. 과목마다 별도 공간에서 깔끔하게 메모하세요.",
-    tags: ["노트 작성", "복습"],
-    comingSoon: true,
-    gradient: { from: "#6366f1", to: "#8b5cf6", accent: "rgba(99,102,241,0.2)" },
-  },
 ];
 
 const siteLinks: SiteLink[] = [
