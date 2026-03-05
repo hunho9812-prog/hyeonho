@@ -79,7 +79,7 @@ export default function Hero() {
           className="animate-fade-in-up mb-12"
           style={{ animationDelay: "0.6s", opacity: 0 }}
         >
-          <p className="text-gray-400 text-lg max-w-xl mx-auto leading-relaxed">
+          <p className="text-gray-400 text-lg leading-relaxed text-center">
             사이트를 잘 만들고 싶은 청년입니다.
           </p>
         </div>
