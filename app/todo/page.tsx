@@ -118,19 +118,17 @@ export default function TodoPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 pt-24 pb-16">
+      <div className="relative z-10 px-4 md:px-6 pt-24 pb-16">
 
-        {/* ── Header ── */}
-        <div className="flex items-center gap-4 mb-8 flex-wrap">
-          <div>
-            <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors mb-2 inline-block">
-              ← 홈으로
-            </Link>
-            <h1 className="text-4xl font-bold text-white">✅ TO DO LIST</h1>
-          </div>
+        {/* ── Centered header ── */}
+        <div className="text-center mb-8 max-w-2xl mx-auto">
+          <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
+            ← 홈으로
+          </Link>
+          <h1 className="text-5xl font-bold text-white mb-4">✅ TO DO LIST</h1>
 
-          {/* Date navigator */}
-          <div className="flex items-center gap-2 ml-auto">
+          {/* Date navigator centered */}
+          <div className="flex items-center gap-2 justify-center">
             <button
               onClick={() => goDay(-1)}
               style={{ minWidth: 44, minHeight: 44, touchAction: "manipulation" }}
@@ -141,7 +139,7 @@ export default function TodoPage() {
             <button
               onClick={goToday}
               style={{ minHeight: 44, touchAction: "manipulation", ...cardStyle }}
-              className="px-4 rounded-xl text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
+              className="px-5 rounded-xl text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
             >
               {displayDate}
               {isToday && <span className="ml-2 text-purple-400 text-xs">오늘</span>}
@@ -156,7 +154,8 @@ export default function TodoPage() {
           </div>
         </div>
 
-        {/* ── 3-column layout ── */}
+        {/* ── Centered 3-column layout ── */}
+        <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-5">
 
           {/* ═══ Col 1: 미래 시각화 + TO DO + 감사일기 ═══ */}
@@ -423,6 +422,7 @@ export default function TodoPage() {
             </div>
           </div>
         </div>
+        </div>{/* end max-w-6xl */}
       </div>
     </main>
   );

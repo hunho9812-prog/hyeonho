@@ -84,23 +84,20 @@ export default function ThoughtsPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 pt-24 pb-16">
+      <div className="relative z-10 px-4 md:px-6 pt-24 pb-16">
 
-        {/* ── Header ── */}
-        <div className="flex items-start justify-between mb-8 flex-wrap gap-3">
-          <div>
-            <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors mb-2 inline-block">
-              ← 홈으로
-            </Link>
-            <h1 className="text-4xl font-bold text-white">💭 나의 생각</h1>
-            {view === "list" && (
-              <p className="text-gray-500 text-sm mt-1">
-                {notes.length}개의 글
-              </p>
-            )}
-          </div>
+        {/* ── Centered header ── */}
+        <div className="text-center mb-8 max-w-2xl mx-auto">
+          <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
+            ← 홈으로
+          </Link>
+          <h1 className="text-5xl font-bold text-white mb-2">💭 나의 생각</h1>
+          {view === "list" && (
+            <p className="text-gray-500 text-sm mb-4">{notes.length}개의 글</p>
+          )}
 
-          <div className="flex gap-2 mt-2">
+          {/* Action buttons centered */}
+          <div className="flex gap-2 justify-center mt-4">
             {view === "edit" && (
               <button
                 onClick={() => setView("list")}
@@ -156,6 +153,9 @@ export default function ThoughtsPage() {
             )}
           </div>
         </div>
+
+        {/* ── Centered content ── */}
+        <div className="max-w-4xl mx-auto">
 
         {/* ── List view ── */}
         {view === "list" && (
@@ -345,6 +345,7 @@ export default function ThoughtsPage() {
             </div>
           </div>
         )}
+        </div>{/* end max-w-4xl */}
       </div>
     </main>
   );

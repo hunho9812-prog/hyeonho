@@ -124,31 +124,35 @@ export default function CalendarPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 pt-24 pb-16">
-        {/* Header */}
-        <div className="mb-6">
-          <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors mb-2 inline-block">
+      <div className="relative z-10 px-4 md:px-6 pt-24 pb-16">
+
+        {/* ── Centered header ── */}
+        <div className="text-center mb-8 max-w-2xl mx-auto">
+          <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
             ← 홈으로
           </Link>
-          <h1 className="text-4xl font-bold text-white">📆 달력</h1>
+          <h1 className="text-5xl font-bold text-white mb-3">📆 달력</h1>
+          <p className="text-gray-400 text-sm">월별 캘린더로 일정을 확인하고 날짜별 메모를 기록하세요</p>
+
+          {/* Legend */}
+          <div className="flex flex-wrap gap-3 mt-4 text-xs justify-center">
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(251,146,60,0.4)", border: "1px solid rgba(251,146,60,0.7)" }} />
+              <span className="text-orange-400">중간고사 (4/13~17)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(251,113,133,0.4)", border: "1px solid rgba(251,113,133,0.7)" }} />
+              <span className="text-red-400">기말고사 (6/15~19)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full" style={{ background: "#f87171" }} />
+              <span className="text-gray-400">공휴일</span>
+            </div>
+          </div>
         </div>
 
-        {/* Legend */}
-        <div className="flex flex-wrap gap-3 mb-5 text-xs">
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(251,146,60,0.4)", border: "1px solid rgba(251,146,60,0.7)" }} />
-            <span className="text-orange-400">중간고사 (4/13~17)</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(251,113,133,0.4)", border: "1px solid rgba(251,113,133,0.7)" }} />
-            <span className="text-red-400">기말고사 (6/15~19)</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full" style={{ background: "#f87171" }} />
-            <span className="text-gray-400">공휴일</span>
-          </div>
-        </div>
-
+        {/* ── Centered content ── */}
+        <div className="max-w-6xl mx-auto">
         <div className="grid xl:grid-cols-4 md:grid-cols-3 gap-6">
           {/* Calendar */}
           <div
@@ -375,6 +379,7 @@ export default function CalendarPage() {
             </div>
           </div>
         </div>
+        </div>{/* end max-w-6xl */}
       </div>
     </main>
   );
