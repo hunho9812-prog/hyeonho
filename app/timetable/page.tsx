@@ -49,6 +49,26 @@ const toTime = (totalMin: number) => {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 };
 
+// ── 기본 시간표 데이터 ──────────────────────────────────────
+// localStorage가 비어있을 때 자동으로 로드됩니다.
+const DEFAULT_CLASSES: ClassItem[] = [
+  // 핵화학 및 재료 (월, 수)
+  { id: 101, name: "핵화학 및 재료",      professor: "", room: "207관 102호",  day: 0, startTime: "10:30", endTime: "11:45", colorIndex: 0 },
+  { id: 102, name: "핵화학 및 재료",      professor: "", room: "207관 102호",  day: 2, startTime: "10:30", endTime: "11:45", colorIndex: 0 },
+  // 뇌과학 내생각의비밀 (월)
+  { id: 103, name: "뇌과학 내생각의비밀", professor: "", room: "310관 B501호", day: 0, startTime: "12:00", endTime: "15:00", colorIndex: 5 },
+  // 에너지계측공학 (화, 목)
+  { id: 104, name: "에너지계측공학",      professor: "", room: "208관 101호",  day: 1, startTime: "13:30", endTime: "14:45", colorIndex: 1 },
+  { id: 105, name: "에너지계측공학",      professor: "", room: "208관 101호",  day: 3, startTime: "13:30", endTime: "14:45", colorIndex: 1 },
+  // 원자력공학개론 (화, 목)
+  { id: 106, name: "원자력공학개론",      professor: "", room: "310관 419호",  day: 1, startTime: "15:00", endTime: "16:15", colorIndex: 4 },
+  { id: 107, name: "원자력공학개론",      professor: "", room: "310관 419호",  day: 3, startTime: "15:00", endTime: "16:15", colorIndex: 4 },
+  // 보건물리 (금)
+  { id: 108, name: "보건물리",            professor: "", room: "310관 419호",  day: 4, startTime: "15:00", endTime: "16:00", colorIndex: 2 },
+];
+
+const STORAGE_KEY = "hyeonho-timetable-v3";
+
 const emptyForm = {
   name: "",
   professor: "",
@@ -65,13 +85,19 @@ export default function TimetablePage() {
   const [isNew, setIsNew] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("hyeonho-timetable-v2");
-    if (saved) setClasses(JSON.parse(saved));
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      setClasses(JSON.parse(saved));
+    } else {
+      // 저장된 데이터 없으면 기본 시간표 로드
+      setClasses(DEFAULT_CLASSES);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CLASSES));
+    }
   }, []);
 
   const save = (updated: ClassItem[]) => {
     setClasses(updated);
-    localStorage.setItem("hyeonho-timetable-v2", JSON.stringify(updated));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   };
 
   const openAdd = (day: number, clickY: number) => {
