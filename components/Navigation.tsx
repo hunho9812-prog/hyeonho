@@ -34,11 +34,7 @@ export default function Navigation() {
         borderBottom: scrolled ? "1px solid rgba(255,255,255,0.05)" : "none",
       }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-        <a href="#" className="text-xl font-bold gradient-text flex-shrink-0">
-          현호
-        </a>
-
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-end gap-4">
         <ul className="flex gap-2 items-center flex-wrap justify-end">
           {navLinks.map((link) => (
             <li key={link.href}>

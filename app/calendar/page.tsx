@@ -124,10 +124,10 @@ export default function CalendarPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 px-4 md:px-6 pt-24 pb-16">
+      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
 
         {/* ── Centered header ── */}
-        <div className="text-center mb-8 max-w-2xl mx-auto">
+        <div className="text-center mb-8 w-full max-w-2xl">
           <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
             ← 홈으로
           </Link>
@@ -152,7 +152,7 @@ export default function CalendarPage() {
         </div>
 
         {/* ── Centered content ── */}
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full max-w-6xl">
         <div className="grid xl:grid-cols-4 md:grid-cols-3 gap-6">
           {/* Calendar */}
           <div

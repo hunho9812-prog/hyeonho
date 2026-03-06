@@ -118,10 +118,10 @@ export default function TodoPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 px-4 md:px-6 pt-24 pb-16">
+      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
 
         {/* ── Centered header ── */}
-        <div className="text-center mb-8 max-w-2xl mx-auto">
+        <div className="text-center mb-8 w-full max-w-2xl">
           <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
             ← 홈으로
           </Link>
@@ -155,7 +155,7 @@ export default function TodoPage() {
         </div>
 
         {/* ── Centered 3-column layout ── */}
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full max-w-6xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-5">
 
           {/* ═══ Col 1: 미래 시각화 + TO DO + 감사일기 ═══ */}
