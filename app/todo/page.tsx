@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Background from "@/components/Background";
+import Navigation from "@/components/Navigation";
 
 interface TodoItem {
   id: number;
@@ -116,7 +117,8 @@ export default function TodoPage() {
   return (
     <main className="relative min-h-screen">
       <Background />
-      <div className="relative z-10 max-w-7xl mx-auto px-4 pt-24 pb-16">
+      <Navigation />
+      <div className="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 pt-24 pb-16">
 
         {/* ── Header ── */}
         <div className="flex items-center gap-4 mb-8 flex-wrap">
@@ -124,7 +126,7 @@ export default function TodoPage() {
             <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors mb-2 inline-block">
               ← 홈으로
             </Link>
-            <h1 className="text-3xl font-bold text-white">✅ TO DO LIST</h1>
+            <h1 className="text-4xl font-bold text-white">✅ TO DO LIST</h1>
           </div>
 
           {/* Date navigator */}

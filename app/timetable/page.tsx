@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Background from "@/components/Background";
+import Navigation from "@/components/Navigation";
 
 const DAYS = ["월", "화", "수", "목", "금"];
 const TIMES = [
@@ -116,8 +117,9 @@ export default function TimetablePage() {
   return (
     <main className="relative min-h-screen">
       <Background />
+      <Navigation />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 pt-24 pb-16">
+      <div className="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 pt-24 pb-16">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -127,7 +129,7 @@ export default function TimetablePage() {
             >
               ← 홈으로
             </Link>
-            <h1 className="text-3xl font-bold text-white">📅 시간표</h1>
+            <h1 className="text-4xl font-bold text-white">📅 시간표</h1>
           </div>
           <p className="text-gray-500 text-sm">빈 칸을 클릭해서 수업을 추가하세요</p>
         </div>

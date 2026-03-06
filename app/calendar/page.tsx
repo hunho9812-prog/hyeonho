@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Background from "@/components/Background";
+import Navigation from "@/components/Navigation";
 
 interface CalendarEvent {
   id: number;
@@ -122,13 +123,14 @@ export default function CalendarPage() {
   return (
     <main className="relative min-h-screen">
       <Background />
-      <div className="relative z-10 max-w-5xl mx-auto px-4 pt-24 pb-16">
+      <Navigation />
+      <div className="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 pt-24 pb-16">
         {/* Header */}
         <div className="mb-6">
           <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors mb-2 inline-block">
             ← 홈으로
           </Link>
-          <h1 className="text-3xl font-bold text-white">📆 달력</h1>
+          <h1 className="text-4xl font-bold text-white">📆 달력</h1>
         </div>
 
         {/* Legend */}
@@ -147,10 +149,10 @@ export default function CalendarPage() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid xl:grid-cols-4 md:grid-cols-3 gap-6">
           {/* Calendar */}
           <div
-            className="md:col-span-2 rounded-2xl p-6"
+            className="xl:col-span-3 md:col-span-2 rounded-2xl p-6"
             style={{ background: "rgba(10,10,15,0.7)", border: "1px solid rgba(255,255,255,0.07)" }}
           >
             {/* Month nav */}
