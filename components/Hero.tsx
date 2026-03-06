@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CourseModal from "./CourseModal";
 
-const roles = ["방구석 청년"];
+const roles = ["현호의 비밀공간"];
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
