@@ -128,9 +128,6 @@ export default function CalendarPage() {
 
         {/* ── Centered header ── */}
         <div className="text-center mb-8 w-full max-w-2xl">
-          <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
-            ← 홈으로
-          </Link>
           <h1 className="text-5xl font-bold text-white mb-3">📆 달력</h1>
           <p className="text-gray-400 text-sm">월별 캘린더로 일정을 확인하고 날짜별 메모를 기록하세요</p>
 

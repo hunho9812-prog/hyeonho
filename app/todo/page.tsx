@@ -122,9 +122,6 @@ export default function TodoPage() {
 
         {/* ── Centered header ── */}
         <div className="text-center mb-8 w-full max-w-2xl">
-          <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
-            ← 홈으로
-          </Link>
           <h1 className="text-5xl font-bold text-white mb-4">✅ TO DO LIST</h1>
 
           {/* Date navigator centered */}

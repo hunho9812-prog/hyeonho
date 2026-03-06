@@ -88,9 +88,6 @@ export default function ThoughtsPage() {
 
         {/* ── Centered header ── */}
         <div className="text-center mb-8 w-full max-w-2xl">
-          <Link href="/" className="text-sm text-gray-600 hover:text-gray-300 transition-colors mb-4 inline-block">
-            ← 홈으로
-          </Link>
           <h1 className="text-5xl font-bold text-white mb-2">💭 나의 생각</h1>
           {view === "list" && (
             <p className="text-gray-500 text-sm mb-4">{notes.length}개의 글</p>
