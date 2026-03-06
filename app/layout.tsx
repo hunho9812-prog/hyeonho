@@ -1,26 +1,20 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: "김현호 | Hyeonho Kim",
-  description: "김현호의 개인 소개 페이지입니다.",
+  title: 'Statfordegree Hub',
+  description: '팀 업무 관리와 메뉴얼 정리를 위한 지식관리 시스템',
   openGraph: {
-    title: "김현호 | Hyeonho Kim",
-    description: "김현호의 개인 소개 페이지입니다.",
-    type: "website",
+    title: 'Statfordegree Hub',
+    description: '팀 업무 관리와 메뉴얼 정리를 위한 지식관리 시스템',
+    type: 'website',
   },
-};
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className="antialiased">
-        {children}
-      </body>
+      <body className="antialiased h-full bg-white text-neutral-900">{children}</body>
     </html>
-  );
+  )
 }
