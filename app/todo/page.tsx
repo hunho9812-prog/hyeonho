@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Background from "@/components/Background";
 import Navigation from "@/components/Navigation";
+import { supabase } from "@/lib/supabase";
+import { migratePlanner } from "@/lib/migrate";
 
 interface TodoItem {
   id: number;
@@ -58,16 +59,53 @@ export default function TodoPage() {
   const [data, setData] = useState<DayData>(defaultDay());
   const [todoInput, setTodoInput] = useState("");
   const [brainInput, setBrainInput] = useState("");
+  const [loading, setLoading] = useState(true);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const migratedRef = useRef(false);
 
+  // ── Supabase 저장 (debounced) ──
+  const persistToSupabase = useCallback(
+    async (targetDate: string, updated: DayData) => {
+      await supabase
+        .from("planner")
+        .upsert({ date: targetDate, data: updated }, { onConflict: "date" });
+    },
+    []
+  );
+
+  const save = useCallback(
+    (updated: DayData, targetDate = date) => {
+      setData(updated);
+      clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = setTimeout(() => {
+        persistToSupabase(targetDate, updated);
+      }, 500);
+    },
+    [date, persistToSupabase]
+  );
+
+  // ── 날짜별 데이터 로드 ──
   useEffect(() => {
-    const saved = localStorage.getItem(`hyeonho-planner-${date}`);
-    setData(saved ? JSON.parse(saved) : defaultDay());
-  }, [date]);
+    async function loadDate() {
+      setLoading(true);
 
-  const save = (updated: DayData) => {
-    setData(updated);
-    localStorage.setItem(`hyeonho-planner-${date}`, JSON.stringify(updated));
-  };
+      // 최초 로드 시 localStorage → Supabase 마이그레이션
+      if (!migratedRef.current) {
+        await migratePlanner();
+        migratedRef.current = true;
+      }
+
+      const { data: row } = await supabase
+        .from("planner")
+        .select("data")
+        .eq("date", date)
+        .maybeSingle();
+
+      setData(row ? (row.data as DayData) : defaultDay());
+      setLoading(false);
+    }
+    loadDate();
+  }, [date]);
 
   // ── Todo helpers ──
   const addTodo = () => {
@@ -151,7 +189,12 @@ export default function TodoPage() {
           </div>
         </div>
 
-        {/* ── Centered 3-column layout ── */}
+        {loading ? (
+          <div className="flex items-center justify-center py-32">
+            <div className="text-gray-500 text-sm">불러오는 중...</div>
+          </div>
+        ) : (
+        /* ── Centered 3-column layout ── */
         <div className="w-full max-w-6xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-5">
 
@@ -207,7 +250,6 @@ export default function TodoPage() {
                     className="flex items-center gap-2 rounded-xl px-3 py-2"
                     style={{ background: "rgba(255,255,255,0.04)" }}
                   >
-                    {/* Checkbox */}
                     <button
                       onClick={() => toggleTodo(t.id)}
                       style={{
@@ -419,7 +461,8 @@ export default function TodoPage() {
             </div>
           </div>
         </div>
-        </div>{/* end max-w-6xl */}
+        </div>
+        )}
       </div>
     </main>
   );

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Background from "@/components/Background";
 import Navigation from "@/components/Navigation";
+import { supabase } from "@/lib/supabase";
+import { migrateTimetable } from "@/lib/migrate";
 
 const DAYS = ["월", "화", "수", "목", "금"];
 const TIMES = [
@@ -13,10 +14,10 @@ const TIMES = [
   "18:00", "18:30",
 ];
 
-const ROW_H = 40;        // px per 30-min slot
-const START_MIN = 9 * 60; // 09:00
+const ROW_H = 40;
+const START_MIN = 9 * 60;
 const SLOTS = 20;
-const TOTAL_H = ROW_H * SLOTS; // 800px
+const TOTAL_H = ROW_H * SLOTS;
 
 const COLORS = [
   { bg: "rgba(96, 165, 250, 0.15)",  border: "rgba(96, 165, 250, 0.5)",  text: "#93c5fd", label: "파랑" },
@@ -33,8 +34,8 @@ interface ClassItem {
   professor: string;
   room: string;
   day: number;
-  startTime: string; // "HH:MM"
-  endTime: string;   // "HH:MM"
+  startTime: string;
+  endTime: string;
   colorIndex: number;
 }
 
@@ -50,24 +51,16 @@ const toTime = (totalMin: number) => {
 };
 
 // ── 기본 시간표 데이터 ──────────────────────────────────────
-// localStorage가 비어있을 때 자동으로 로드됩니다.
 const DEFAULT_CLASSES: ClassItem[] = [
-  // 핵화학 및 재료 (월, 수)
   { id: 101, name: "핵화학 및 재료",      professor: "", room: "207관 102호",  day: 0, startTime: "10:30", endTime: "11:45", colorIndex: 0 },
   { id: 102, name: "핵화학 및 재료",      professor: "", room: "207관 102호",  day: 2, startTime: "10:30", endTime: "11:45", colorIndex: 0 },
-  // 뇌과학 내생각의비밀 (월)
   { id: 103, name: "뇌과학 내생각의비밀", professor: "", room: "310관 B501호", day: 0, startTime: "12:00", endTime: "15:00", colorIndex: 5 },
-  // 에너지계측공학 (화, 목)
   { id: 104, name: "에너지계측공학",      professor: "", room: "208관 101호",  day: 1, startTime: "13:30", endTime: "14:45", colorIndex: 1 },
   { id: 105, name: "에너지계측공학",      professor: "", room: "208관 101호",  day: 3, startTime: "13:30", endTime: "14:45", colorIndex: 1 },
-  // 원자력공학개론 (화, 목)
   { id: 106, name: "원자력공학개론",      professor: "", room: "310관 419호",  day: 1, startTime: "15:00", endTime: "16:15", colorIndex: 4 },
   { id: 107, name: "원자력공학개론",      professor: "", room: "310관 419호",  day: 3, startTime: "15:00", endTime: "16:15", colorIndex: 4 },
-  // 보건물리 (금)
   { id: 108, name: "보건물리",            professor: "", room: "310관 419호",  day: 4, startTime: "15:00", endTime: "16:00", colorIndex: 2 },
 ];
-
-const STORAGE_KEY = "hyeonho-timetable-v3";
 
 const emptyForm = {
   name: "",
@@ -79,29 +72,60 @@ const emptyForm = {
   colorIndex: 0,
 };
 
+// DB row → ClassItem 변환
+function rowToClass(row: Record<string, unknown>): ClassItem {
+  return {
+    id: row.id as number,
+    name: row.name as string,
+    professor: row.professor as string,
+    room: row.room as string,
+    day: row.day as number,
+    startTime: row.start_time as string,
+    endTime: row.end_time as string,
+    colorIndex: row.color_index as number,
+  };
+}
+
 export default function TimetablePage() {
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [modal, setModal] = useState<Partial<ClassItem> | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  // ── 초기 로드: 마이그레이션 후 Supabase에서 불러오기 ──
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      setClasses(JSON.parse(saved));
-    } else {
-      // 저장된 데이터 없으면 기본 시간표 로드
-      setClasses(DEFAULT_CLASSES);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CLASSES));
+    async function init() {
+      await migrateTimetable();
+
+      const { data } = await supabase
+        .from("timetable")
+        .select("*")
+        .order("id");
+
+      if (data && data.length > 0) {
+        setClasses(data.map(rowToClass));
+      } else {
+        // Supabase에 데이터 없으면 기본 시간표 저장
+        setClasses(DEFAULT_CLASSES);
+        await supabase.from("timetable").insert(
+          DEFAULT_CLASSES.map((c) => ({
+            id: c.id,
+            name: c.name,
+            professor: c.professor,
+            room: c.room,
+            day: c.day,
+            start_time: c.startTime,
+            end_time: c.endTime,
+            color_index: c.colorIndex,
+          }))
+        );
+      }
+      setLoading(false);
     }
+    init();
   }, []);
 
-  const save = (updated: ClassItem[]) => {
-    setClasses(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  };
-
   const openAdd = (day: number, clickY: number) => {
-    // snap to nearest 30-min slot
     const slot = Math.floor(clickY / ROW_H);
     const startMin = START_MIN + slot * 30;
     const endMin = Math.min(startMin + 60, START_MIN + SLOTS * 30);
@@ -114,20 +138,46 @@ export default function TimetablePage() {
     setIsNew(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!modal?.name?.trim()) return;
     if (toMin(modal.startTime!) >= toMin(modal.endTime!)) return;
+
     if (isNew) {
-      save([...classes, { ...(modal as ClassItem), id: Date.now() }]);
+      const newClass: ClassItem = { ...(modal as ClassItem), id: Date.now() };
+      setClasses((prev) => [...prev, newClass]);
+      await supabase.from("timetable").insert({
+        id: newClass.id,
+        name: newClass.name,
+        professor: newClass.professor,
+        room: newClass.room,
+        day: newClass.day,
+        start_time: newClass.startTime,
+        end_time: newClass.endTime,
+        color_index: newClass.colorIndex,
+      });
     } else {
-      save(classes.map((c) => (c.id === modal!.id ? (modal as ClassItem) : c)));
+      const updated = modal as ClassItem;
+      setClasses((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
+      await supabase
+        .from("timetable")
+        .update({
+          name: updated.name,
+          professor: updated.professor,
+          room: updated.room,
+          day: updated.day,
+          start_time: updated.startTime,
+          end_time: updated.endTime,
+          color_index: updated.colorIndex,
+        })
+        .eq("id", updated.id);
     }
     setModal(null);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!modal?.id) return;
-    save(classes.filter((c) => c.id !== modal.id));
+    setClasses((prev) => prev.filter((c) => c.id !== modal.id));
+    await supabase.from("timetable").delete().eq("id", modal.id);
     setModal(null);
   };
 
@@ -153,7 +203,12 @@ export default function TimetablePage() {
           <p className="text-gray-400 text-sm">빈 칸을 클릭해서 수업을 추가하세요</p>
         </div>
 
-        {/* ── Centered timetable ── */}
+        {loading ? (
+          <div className="flex items-center justify-center py-32">
+            <div className="text-gray-500 text-sm">불러오는 중...</div>
+          </div>
+        ) : (
+        /* ── Centered timetable ── */
         <div className="w-full max-w-6xl">
         <div
           className="rounded-2xl overflow-hidden overflow-x-auto"
@@ -310,7 +365,8 @@ export default function TimetablePage() {
             </div>
           </div>
         </div>
-        </div>{/* end max-w-6xl */}
+        </div>
+        )}
       </div>
 
       {/* Modal */}
@@ -338,7 +394,6 @@ export default function TimetablePage() {
             </div>
 
             <div className="space-y-4">
-              {/* Name */}
               <div>
                 <label className="text-xs text-gray-400 mb-1 block">과목명 *</label>
                 <input
@@ -352,7 +407,6 @@ export default function TimetablePage() {
                 />
               </div>
 
-              {/* Professor + Room */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-gray-400 mb-1 block">교수님</label>
@@ -378,7 +432,6 @@ export default function TimetablePage() {
                 </div>
               </div>
 
-              {/* Day + Time */}
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="text-xs text-gray-400 mb-1 block">요일</label>
@@ -421,7 +474,6 @@ export default function TimetablePage() {
                 <p className="text-red-400 text-xs">종료 시간이 시작 시간보다 늦어야 합니다.</p>
               )}
 
-              {/* Color */}
               <div>
                 <label className="text-xs text-gray-400 mb-2 block">색상</label>
                 <div className="flex gap-2">
@@ -442,7 +494,6 @@ export default function TimetablePage() {
               </div>
             </div>
 
-            {/* Buttons */}
             <div className="flex gap-3 mt-6">
               {!isNew && (
                 <button

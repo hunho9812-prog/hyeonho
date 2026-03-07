@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Background from "@/components/Background";
 import Navigation from "@/components/Navigation";
+import { supabase } from "@/lib/supabase";
+import { migrateCalendar } from "@/lib/migrate";
 
 interface CalendarEvent {
   id: number;
@@ -17,10 +18,7 @@ const MONTH_NAMES = ["1월","2월","3월","4월","5월","6월","7월","8월","9�
 const DAY_NAMES = ["일","월","화","수","목","금","토"];
 
 // ── 대한민국 공휴일 ──────────────────────────────────────────
-// "MM-DD"  → 매년 반복 (양력 고정)
-// "YYYY-MM-DD" → 특정 연도
 const HOLIDAYS: Record<string, string> = {
-  // 양력 고정
   "01-01": "신정",
   "03-01": "삼일절",
   "05-01": "근로자의 날",
@@ -64,7 +62,7 @@ function dateStr(y: number, m: number, d: number) {
 
 function getHoliday(ds: string): string | null {
   if (HOLIDAYS[ds]) return HOLIDAYS[ds];
-  const mmdd = ds.slice(5); // "MM-DD"
+  const mmdd = ds.slice(5);
   return HOLIDAYS[mmdd] ?? null;
 }
 
@@ -82,24 +80,46 @@ export default function CalendarPage() {
   const [selected, setSelected] = useState<string>(todayStr);
   const [inputText, setInputText] = useState("");
   const [colorIdx, setColorIdx] = useState(0);
+  const [loading, setLoading] = useState(true);
 
+  // ── 초기 로드: 마이그레이션 후 Supabase에서 불러오기 ──
   useEffect(() => {
-    const saved = localStorage.getItem("hyeonho-calendar-v1");
-    if (saved) setEvents(JSON.parse(saved));
+    async function init() {
+      await migrateCalendar();
+      const { data } = await supabase
+        .from("calendar_events")
+        .select("*")
+        .order("id");
+      if (data) {
+        setEvents(data as CalendarEvent[]);
+      }
+      setLoading(false);
+    }
+    init();
   }, []);
 
-  const save = (updated: CalendarEvent[]) => {
-    setEvents(updated);
-    localStorage.setItem("hyeonho-calendar-v1", JSON.stringify(updated));
-  };
-
-  const addEvent = () => {
+  const addEvent = async () => {
     if (!inputText.trim()) return;
-    save([...events, { id: Date.now(), date: selected, text: inputText.trim(), color: EVENT_COLORS[colorIdx] }]);
+    const newEvent: CalendarEvent = {
+      id: Date.now(),
+      date: selected,
+      text: inputText.trim(),
+      color: EVENT_COLORS[colorIdx],
+    };
+    setEvents((prev) => [...prev, newEvent]);
     setInputText("");
+    await supabase.from("calendar_events").insert({
+      id: newEvent.id,
+      date: newEvent.date,
+      text: newEvent.text,
+      color: newEvent.color,
+    });
   };
 
-  const deleteEvent = (id: number) => save(events.filter((e) => e.id !== id));
+  const deleteEvent = async (id: number) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+    await supabase.from("calendar_events").delete().eq("id", id);
+  };
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDay = new Date(year, month, 1).getDay();
@@ -148,7 +168,12 @@ export default function CalendarPage() {
           </div>
         </div>
 
-        {/* ── Centered content ── */}
+        {loading ? (
+          <div className="flex items-center justify-center py-32">
+            <div className="text-gray-500 text-sm">불러오는 중...</div>
+          </div>
+        ) : (
+        /* ── Centered content ── */
         <div className="w-full max-w-6xl">
         <div className="grid xl:grid-cols-4 md:grid-cols-3 gap-6">
           {/* Calendar */}
@@ -205,7 +230,6 @@ export default function CalendarPage() {
                 const exam = getExamPeriod(ds);
                 const isHoliday = !!holiday || dow === 0;
 
-                // Background layering: selected > exam > today > default
                 let bg = "transparent";
                 let border = "1px solid transparent";
                 if (isSel) {
@@ -241,7 +265,6 @@ export default function CalendarPage() {
                       {d}
                     </span>
 
-                    {/* Holiday name */}
                     {holiday && (
                       <span
                         className="text-center leading-tight mt-0.5"
@@ -251,7 +274,6 @@ export default function CalendarPage() {
                       </span>
                     )}
 
-                    {/* Exam label (only on first day of period) */}
                     {exam && ds === exam.start && (
                       <span
                         className="rounded px-0.5 mt-0.5"
@@ -261,7 +283,6 @@ export default function CalendarPage() {
                       </span>
                     )}
 
-                    {/* Event dots */}
                     {dayEvents.length > 0 && (
                       <div className="flex flex-wrap gap-0.5 justify-center mt-0.5">
                         {dayEvents.slice(0, 3).map((ev) => (
@@ -280,10 +301,8 @@ export default function CalendarPage() {
             className="rounded-2xl p-5 flex flex-col min-h-[400px]"
             style={{ background: "rgba(10,10,15,0.7)", border: "1px solid rgba(255,255,255,0.07)" }}
           >
-            {/* Date title */}
             <h3 className="text-base font-bold text-white mb-1">{displaySelected}</h3>
 
-            {/* Holiday badge */}
             {selectedHoliday && (
               <div
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium mb-2 self-start"
@@ -293,7 +312,6 @@ export default function CalendarPage() {
               </div>
             )}
 
-            {/* Exam period badge */}
             {selectedExam && (
               <div
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium mb-2 self-start"
@@ -305,7 +323,6 @@ export default function CalendarPage() {
 
             <div className="border-t border-white/5 mt-1 mb-3" />
 
-            {/* Add event input */}
             <input
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
@@ -319,7 +336,6 @@ export default function CalendarPage() {
               className="w-full rounded-xl px-3 py-3 text-sm text-white outline-none mb-2"
             />
 
-            {/* Color picker */}
             <div className="flex gap-2 mb-3">
               {EVENT_COLORS.map((c, i) => (
                 <button
@@ -338,7 +354,6 @@ export default function CalendarPage() {
               ))}
             </div>
 
-            {/* Add button */}
             <button
               onClick={addEvent}
               style={{
@@ -351,7 +366,6 @@ export default function CalendarPage() {
               + 추가
             </button>
 
-            {/* Events list */}
             <div className="flex-1 space-y-2 overflow-y-auto">
               {selectedEvents.length === 0 ? (
                 <p className="text-gray-600 text-xs text-center py-8">일정 없음</p>
@@ -376,7 +390,8 @@ export default function CalendarPage() {
             </div>
           </div>
         </div>
-        </div>{/* end max-w-6xl */}
+        </div>
+        )}
       </div>
     </main>
   );
