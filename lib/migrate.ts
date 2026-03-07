@@ -120,11 +120,14 @@ export async function migratePlanner(): Promise<void> {
 
     const finalData = existing ? mergeDayData(existing.data as DayData, local) : local;
 
-    await supabase
+    const { error } = await supabase
       .from("planner")
       .upsert({ date, data: finalData }, { onConflict: "date" });
 
-    localStorage.removeItem(key);
+    // upsert 성공 시에만 localStorage 삭제 (실패 시 데이터 보존)
+    if (!error) {
+      localStorage.removeItem(key);
+    }
   }
 }
 
@@ -143,7 +146,7 @@ export async function migrateCalendar(): Promise<void> {
 
   if (events.length > 0) {
     // 기존 DB에 없는 id만 삽입 (중복 방지)
-    await supabase.from("calendar_events").upsert(
+    const { error } = await supabase.from("calendar_events").upsert(
       events.map((e) => ({
         id: e.id,
         date: e.date,
@@ -152,6 +155,7 @@ export async function migrateCalendar(): Promise<void> {
       })),
       { onConflict: "id", ignoreDuplicates: true }
     );
+    if (error) return; // 실패 시 localStorage 보존
   }
 
   localStorage.removeItem("hyeonho-calendar-v1");
@@ -171,7 +175,7 @@ export async function migrateTimetable(): Promise<void> {
   }
 
   if (classes.length > 0) {
-    await supabase.from("timetable").upsert(
+    const { error } = await supabase.from("timetable").upsert(
       classes.map((c) => ({
         id: c.id,
         name: c.name,
@@ -184,6 +188,7 @@ export async function migrateTimetable(): Promise<void> {
       })),
       { onConflict: "id" }
     );
+    if (error) return; // 실패 시 localStorage 보존
   }
 
   localStorage.removeItem("hyeonho-timetable-v3");
@@ -203,7 +208,7 @@ export async function migrateThoughts(): Promise<void> {
   }
 
   if (notes.length > 0) {
-    await supabase.from("thoughts").upsert(
+    const { error } = await supabase.from("thoughts").upsert(
       notes.map((n) => ({
         id: n.id,
         title: n.title,
@@ -213,6 +218,7 @@ export async function migrateThoughts(): Promise<void> {
       })),
       { onConflict: "id", ignoreDuplicates: true }
     );
+    if (error) return; // 실패 시 localStorage 보존
   }
 
   localStorage.removeItem("hyeonho-thoughts-v1");
