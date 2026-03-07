@@ -60,7 +60,7 @@ export default function TodoPage() {
   const [todoInput, setTodoInput] = useState("");
   const [brainInput, setBrainInput] = useState("");
   const [loading, setLoading] = useState(true);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const migratedRef = useRef(false);
 
   // ── Supabase 저장 (debounced) ──
