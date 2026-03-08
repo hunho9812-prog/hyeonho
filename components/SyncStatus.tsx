@@ -10,31 +10,64 @@ export default function SyncStatus() {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    async function check() {
-      // 단순 연결 테스트: planner 테이블에서 1행 조회
-      const { error } = await supabase
-        .from("planner")
-        .select("date")
-        .limit(1);
+    const timer = setTimeout(() => {
+      setErrMsg("연결 시간 초과 - Vercel 환경변수와 재배포를 확인하세요");
+      setStatus("error");
+    }, 5000);
 
-      if (error) {
-        setErrMsg(error.message);
+    async function check() {
+      try {
+        const { error } = await supabase
+          .from("planner")
+          .select("date")
+          .limit(1);
+
+        clearTimeout(timer);
+        if (error) {
+          setErrMsg(error.message);
+          setStatus("error");
+        } else {
+          setStatus("ok");
+        }
+      } catch (e) {
+        clearTimeout(timer);
+        setErrMsg(String(e));
         setStatus("error");
-      } else {
-        setStatus("ok");
       }
     }
     check();
+
+    return () => clearTimeout(timer);
   }, []);
+
+  const dotStyle = (color: string): React.CSSProperties => ({
+    width: 8,
+    height: 8,
+    borderRadius: "50%",
+    background: color,
+    display: "inline-block",
+    flexShrink: 0,
+  });
+
+  const wrapStyle = (color: string, cursor?: string): React.CSSProperties => ({
+    fontSize: 11,
+    color,
+    display: "flex",
+    alignItems: "center",
+    gap: 5,
+    whiteSpace: "nowrap",
+    cursor: cursor ?? "default",
+    padding: "4px 8px",
+    borderRadius: 8,
+    background: "rgba(255,255,255,0.05)",
+    border: `1px solid ${color}33`,
+  });
 
   if (status === "checking") {
     return (
-      <span
-        title="Supabase 연결 확인 중..."
-        style={{ fontSize: 11, color: "#94a3b8", display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}
-      >
-        <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#94a3b8", display: "inline-block" }} />
-        동기화 확인 중
+      <span style={wrapStyle("#94a3b8")} title="Supabase 연결 확인 중...">
+        <span style={dotStyle("#94a3b8")} />
+        확인 중
       </span>
     );
   }
@@ -42,21 +75,18 @@ export default function SyncStatus() {
   if (status === "error") {
     return (
       <span
-        title={`Supabase 연결 실패: ${errMsg}\n\nVercel 환경변수(NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY)를 확인하고 재배포하세요.`}
-        style={{ fontSize: 11, color: "#f87171", display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap", cursor: "help" }}
+        style={wrapStyle("#f87171", "help")}
+        title={`연결 실패: ${errMsg}\n\n해결 방법:\n1. Vercel → Settings → Environment Variables에서\n   NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY 확인\n2. Vercel → Deployments → Redeploy`}
       >
-        <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#f87171", display: "inline-block" }} />
+        <span style={dotStyle("#f87171")} />
         동기화 오류
       </span>
     );
   }
 
   return (
-    <span
-      title="Supabase 연결됨 - 기기간 동기화 활성화"
-      style={{ fontSize: 11, color: "#34d399", display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}
-    >
-      <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#34d399", display: "inline-block" }} />
+    <span style={wrapStyle("#34d399")} title="Supabase 연결됨 - 기기간 동기화 활성화">
+      <span style={dotStyle("#34d399")} />
       동기화 중
     </span>
   );

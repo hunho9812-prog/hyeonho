@@ -61,8 +61,8 @@ export default function Navigation() {
           <div />
         )}
 
-        {/* 동기화 상태 (서브페이지에서만) */}
-        {isSubPage && <SyncStatus />}
+        {/* 동기화 상태 (모든 페이지) */}
+        <SyncStatus />
 
         {/* 우측 링크 */}
         <ul className="flex gap-2 items-center flex-wrap justify-end">
