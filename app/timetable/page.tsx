@@ -125,6 +125,18 @@ export default function TimetablePage() {
     init();
   }, []);
 
+  // ── Realtime: 다른 기기에서 변경 시 자동 반영 ──
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime:timetable")
+      .on("postgres_changes", { event: "*", schema: "public", table: "timetable" }, async () => {
+        const { data } = await supabase.from("timetable").select("*").order("id");
+        if (data && data.length > 0) setClasses(data.map(rowToClass));
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
+
   const openAdd = (day: number, clickY: number) => {
     const slot = Math.floor(clickY / ROW_H);
     const startMin = START_MIN + slot * 30;

@@ -53,3 +53,10 @@ create policy "allow all" on planner         for all using (true) with check (tr
 create policy "allow all" on calendar_events for all using (true) with check (true);
 create policy "allow all" on timetable       for all using (true) with check (true);
 create policy "allow all" on thoughts        for all using (true) with check (true);
+
+-- ── Realtime 활성화 ────────────────────────────────────────
+-- 기기간 실시간 동기화를 위해 Realtime publication에 테이블 추가
+alter publication supabase_realtime add table planner;
+alter publication supabase_realtime add table calendar_events;
+alter publication supabase_realtime add table timetable;
+alter publication supabase_realtime add table thoughts;

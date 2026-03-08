@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import SyncStatus from "@/components/SyncStatus";
 
 const navLinks = [
   { href: "#features", label: "기능" },
@@ -59,6 +60,9 @@ export default function Navigation() {
         ) : (
           <div />
         )}
+
+        {/* 동기화 상태 (서브페이지에서만) */}
+        {isSubPage && <SyncStatus />}
 
         {/* 우측 링크 */}
         <ul className="flex gap-2 items-center flex-wrap justify-end">

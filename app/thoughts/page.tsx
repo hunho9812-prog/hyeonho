@@ -61,6 +61,21 @@ export default function ThoughtsPage() {
     init();
   }, []);
 
+  // ── Realtime: 다른 기기에서 변경 시 자동 반영 ──
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime:thoughts")
+      .on("postgres_changes", { event: "*", schema: "public", table: "thoughts" }, async () => {
+        const { data } = await supabase
+          .from("thoughts")
+          .select("*")
+          .order("updated_at", { ascending: false });
+        if (data) setNotes(data.map(rowToNote));
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
+
   const newNote = () => {
     setCurrent({ title: "", body: "" });
     setView("edit");

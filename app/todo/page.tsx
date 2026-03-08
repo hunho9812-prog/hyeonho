@@ -107,6 +107,21 @@ export default function TodoPage() {
     loadDate();
   }, [date]);
 
+  // ── Realtime: 다른 기기에서 변경 시 자동 반영 ──
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime:planner")
+      .on("postgres_changes", { event: "*", schema: "public", table: "planner", filter: `date=eq.${date}` }, async (payload) => {
+        // 내가 방금 저장한 건지 debounce 타이머가 없을 때만 반영
+        if (!saveTimerRef.current) {
+          const newData = (payload.new as { data?: DayData }).data;
+          if (newData) setData(newData);
+        }
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [date]);
+
   // ── Todo helpers ──
   const addTodo = () => {
     if (!todoInput.trim()) return;
