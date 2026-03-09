@@ -28,24 +28,25 @@ export default function Navigation() {
     <nav
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled ? "rgba(10, 10, 15, 0.85)" : "rgba(10,10,15,0.4)",
+        background: scrolled ? "rgba(10, 10, 15, 0.92)" : "rgba(10,10,15,0.75)",
         backdropFilter: "blur(16px)",
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
       }}
     >
-      <div className="w-full px-6 py-3 flex items-center justify-between gap-4">
+      <div className="w-full px-6 py-2.5 flex items-center justify-between gap-4">
 
         {/* 왼쪽: 브랜드 + 퀵링크 */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/"
             style={{
               color: "#e2e8f0",
-              fontSize: "1rem",
+              fontSize: "0.95rem",
               fontWeight: 700,
               letterSpacing: "-0.01em",
               whiteSpace: "nowrap",
               textDecoration: "none",
+              flexShrink: 0,
             }}
           >
             현호의 비밀공간
@@ -56,7 +57,7 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95"
+                className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full transition-all duration-200 hover:scale-105 active:scale-95"
                 style={{
                   background:
                     pathname === link.href
@@ -67,6 +68,7 @@ export default function Navigation() {
                       ? "1px solid rgba(124,58,237,0.5)"
                       : "1px solid rgba(255,255,255,0.1)",
                   color: pathname === link.href ? "#c4b5fd" : "#cbd5e1",
+                  whiteSpace: "nowrap",
                 }}
               >
                 <span>{link.emoji}</span>
@@ -76,50 +78,48 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* 오른쪽: 홈 + 기능 버튼 (크게) + 동기화 상태 (아래 작게) */}
-        <div className="flex flex-col items-end gap-1.5">
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="flex items-center gap-1.5 font-semibold transition-all hover:scale-105 active:scale-95"
-              style={{
-                color: pathname === "/" ? "#c4b5fd" : "#e2e8f0",
-                fontSize: "14px",
-                background:
-                  pathname === "/"
-                    ? "rgba(124,58,237,0.2)"
-                    : "rgba(255,255,255,0.08)",
-                border:
-                  pathname === "/"
-                    ? "1px solid rgba(124,58,237,0.4)"
-                    : "1px solid rgba(255,255,255,0.15)",
-                borderRadius: "10px",
-                padding: "10px 18px",
-                whiteSpace: "nowrap",
-              }}
-            >
-              🏠 홈
-            </Link>
+        {/* 오른쪽: 홈 + 기능 버튼 + 동기화 상태 (한 행) */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 font-semibold transition-all hover:scale-105 active:scale-95"
+            style={{
+              color: pathname === "/" ? "#c4b5fd" : "#e2e8f0",
+              fontSize: "14px",
+              background:
+                pathname === "/"
+                  ? "rgba(124,58,237,0.2)"
+                  : "rgba(255,255,255,0.08)",
+              border:
+                pathname === "/"
+                  ? "1px solid rgba(124,58,237,0.4)"
+                  : "1px solid rgba(255,255,255,0.15)",
+              borderRadius: "10px",
+              padding: "10px 18px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            🏠 홈
+          </Link>
 
-            <a
-              href="/#features"
-              className="flex items-center gap-1.5 font-semibold transition-all hover:scale-105 active:scale-95"
-              style={{
-                color: "#e2e8f0",
-                fontSize: "14px",
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                borderRadius: "10px",
-                padding: "10px 18px",
-                whiteSpace: "nowrap",
-                textDecoration: "none",
-              }}
-            >
-              ⚙ 기능
-            </a>
-          </div>
+          <a
+            href="/#features"
+            className="flex items-center gap-1.5 font-semibold transition-all hover:scale-105 active:scale-95"
+            style={{
+              color: "#e2e8f0",
+              fontSize: "14px",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: "10px",
+              padding: "10px 18px",
+              whiteSpace: "nowrap",
+              textDecoration: "none",
+            }}
+          >
+            ⚙ 기능
+          </a>
 
-          {/* 동기화 상태 — 버튼 아래 작은 표시 */}
+          {/* 동기화 상태 — 버튼 오른쪽에 작게 */}
           <SyncStatus />
         </div>
       </div>

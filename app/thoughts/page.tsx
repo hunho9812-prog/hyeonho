@@ -144,57 +144,16 @@ export default function ThoughtsPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 flex flex-col items-center px-4 pt-28 pb-16">
+      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
 
         {/* ── Centered header ── */}
-        <div className="text-center mb-8 w-full max-w-2xl">
+        <div className="text-center mb-6 w-full max-w-2xl">
           <h1 className="text-5xl font-bold text-white mb-2">💭 나의 생각</h1>
           {view === "list" && !loading && (
             <p className="text-gray-500 text-sm mb-4">{notes.length}개의 글</p>
           )}
-
-          <div className="flex gap-2 justify-center mt-4">
-            {view === "edit" && (
-              <button
-                onClick={() => setView("list")}
-                style={{
-                  background: "rgba(255,255,255,0.07)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  minHeight: 44,
-                  touchAction: "manipulation",
-                }}
-                className="px-5 py-2 rounded-xl text-sm text-gray-300 transition-all hover:bg-white/10 active:scale-95"
-              >
-                목록으로
-              </button>
-            )}
-            {view === "edit" && current.id && (
-              <button
-                onClick={() => setConfirmDelete(current.id!)}
-                style={{
-                  background: "rgba(239,68,68,0.1)",
-                  border: "1px solid rgba(239,68,68,0.25)",
-                  minHeight: 44,
-                  touchAction: "manipulation",
-                }}
-                className="px-4 py-2 rounded-xl text-sm text-red-400 transition-all hover:bg-red-500/20 active:scale-95"
-              >
-                삭제
-              </button>
-            )}
-            {view === "edit" ? (
-              <button
-                onClick={saveNote}
-                style={{
-                  background: "linear-gradient(135deg,#7c3aed,#db2777)",
-                  minHeight: 44,
-                  touchAction: "manipulation",
-                }}
-                className="px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95"
-              >
-                저장
-              </button>
-            ) : (
+          {view === "list" && (
+            <div className="flex gap-2 justify-center mt-4">
               <button
                 onClick={newNote}
                 style={{
@@ -206,8 +165,8 @@ export default function ThoughtsPage() {
               >
                 + 새 글 작성
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* ── Centered content ── */}
@@ -302,11 +261,45 @@ export default function ThoughtsPage() {
                 border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
-              {current.id && (
-                <div className="px-8 pt-5 pb-0 text-xs text-gray-600">
-                  {current.updatedAt ? `마지막 수정: ${formatDateFull(current.updatedAt)}` : "새 글"}
+              {/* 에디터 상단 액션 바 */}
+              <div
+                className="flex items-center justify-between px-6 py-3"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setView("list")}
+                    style={{
+                      background: "rgba(255,255,255,0.07)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      minHeight: 36,
+                      touchAction: "manipulation",
+                    }}
+                    className="px-4 py-1.5 rounded-lg text-sm text-gray-300 transition-all hover:bg-white/10 active:scale-95"
+                  >
+                    ← 목록으로
+                  </button>
+                  {current.id && (
+                    <button
+                      onClick={() => setConfirmDelete(current.id!)}
+                      style={{
+                        background: "rgba(239,68,68,0.1)",
+                        border: "1px solid rgba(239,68,68,0.25)",
+                        minHeight: 36,
+                        touchAction: "manipulation",
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-sm text-red-400 transition-all hover:bg-red-500/20 active:scale-95"
+                    >
+                      삭제
+                    </button>
+                  )}
                 </div>
-              )}
+                {current.id && current.updatedAt && (
+                  <span className="text-xs text-gray-600">
+                    {formatDateFull(current.updatedAt)}
+                  </span>
+                )}
+              </div>
 
               <input
                 value={current.title ?? ""}
