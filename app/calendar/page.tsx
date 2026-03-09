@@ -159,15 +159,18 @@ export default function CalendarPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
-
-        {/* ── Centered header ── */}
-        <div className="text-center mb-8 w-full max-w-2xl">
-          <h1 className="text-5xl font-bold text-white mb-3">📆 달력</h1>
-          <p className="text-gray-400 text-sm">월별 캘린더로 일정을 확인하고 날짜별 메모를 기록하세요</p>
-
+      {/* ── Page Header Bar ── */}
+      <div
+        className="relative z-10 pt-16"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+      >
+        <div className="w-full max-w-6xl mx-auto px-6 py-5 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold text-white">📆 달력</h1>
+            <p className="text-gray-500 text-sm mt-0.5">월별 캘린더로 일정을 확인하고 날짜별 메모를 기록하세요</p>
+          </div>
           {/* Legend */}
-          <div className="flex flex-wrap gap-3 mt-4 text-xs justify-center">
+          <div className="flex flex-wrap gap-3 text-xs">
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(251,146,60,0.4)", border: "1px solid rgba(251,146,60,0.7)" }} />
               <span className="text-orange-400">중간고사 (4/13~17)</span>
@@ -182,14 +185,18 @@ export default function CalendarPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ── Content ── */}
+      <div className="relative z-10 pb-16">
+        <div className="w-full max-w-6xl mx-auto px-6 pt-6">
 
         {loading ? (
           <div className="flex items-center justify-center py-32">
             <div className="text-gray-500 text-sm">불러오는 중...</div>
           </div>
         ) : (
-        /* ── Centered content ── */
-        <div className="w-full max-w-6xl">
+        <div className="w-full">
         <div className="grid xl:grid-cols-4 md:grid-cols-3 gap-6">
           {/* Calendar */}
           <div
@@ -407,6 +414,7 @@ export default function CalendarPage() {
         </div>
         </div>
         )}
+        </div>
       </div>
     </main>
   );

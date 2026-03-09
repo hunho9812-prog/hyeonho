@@ -30,8 +30,8 @@ export default function Background() {
             linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
           `,
           backgroundSize: "60px 60px",
-          maskImage: "linear-gradient(to bottom, transparent 0px, transparent 80px, black 120px)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0px, transparent 80px, black 120px)",
+          maskImage: "linear-gradient(to bottom, transparent 0px, transparent 64px, black 100px)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0px, transparent 64px, black 100px)",
         }}
       />
     </div>

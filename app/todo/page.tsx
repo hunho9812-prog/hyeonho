@@ -171,46 +171,51 @@ export default function TodoPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
-
-        {/* ── Centered header ── */}
-        <div className="text-center mb-8 w-full max-w-2xl">
-          <h1 className="text-5xl font-bold text-white mb-4">✅ TO DO LIST</h1>
-
-          {/* Date navigator centered */}
-          <div className="flex items-center gap-2 justify-center">
+      {/* ── Page Header Bar ── */}
+      <div
+        className="relative z-10 pt-16"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+      >
+        <div className="w-full max-w-6xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+          <h1 className="text-2xl font-bold text-white">✅ TO DO LIST</h1>
+          {/* Date navigator */}
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => goDay(-1)}
-              style={{ minWidth: 44, minHeight: 44, touchAction: "manipulation" }}
+              style={{ minWidth: 40, minHeight: 40, touchAction: "manipulation" }}
               className="rounded-xl text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center text-xl transition-all active:scale-90"
             >
               ‹
             </button>
             <button
               onClick={goToday}
-              style={{ minHeight: 44, touchAction: "manipulation", ...cardStyle }}
-              className="px-5 rounded-xl text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
+              style={{ minHeight: 40, touchAction: "manipulation", ...cardStyle }}
+              className="px-4 rounded-xl text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
             >
               {displayDate}
               {isToday && <span className="ml-2 text-purple-400 text-xs">오늘</span>}
             </button>
             <button
               onClick={() => goDay(1)}
-              style={{ minWidth: 44, minHeight: 44, touchAction: "manipulation" }}
+              style={{ minWidth: 40, minHeight: 40, touchAction: "manipulation" }}
               className="rounded-xl text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-center text-xl transition-all active:scale-90"
             >
               ›
             </button>
           </div>
         </div>
+      </div>
+
+      {/* ── Content ── */}
+      <div className="relative z-10 pb-16">
+        <div className="w-full max-w-6xl mx-auto px-6 pt-6">
 
         {loading ? (
           <div className="flex items-center justify-center py-32">
             <div className="text-gray-500 text-sm">불러오는 중...</div>
           </div>
         ) : (
-        /* ── Centered 3-column layout ── */
-        <div className="w-full max-w-6xl">
+        <div className="w-full">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-5">
 
           {/* ═══ Col 1: 미래 시각화 + TO DO + 감사일기 ═══ */}
@@ -478,6 +483,7 @@ export default function TodoPage() {
         </div>
         </div>
         )}
+        </div>
       </div>
     </main>
   );

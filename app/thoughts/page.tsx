@@ -144,33 +144,41 @@ export default function ThoughtsPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
-
-        {/* ── Centered header ── */}
-        <div className="text-center mb-6 w-full max-w-2xl">
-          <h1 className="text-5xl font-bold text-white mb-2">💭 나의 생각</h1>
-          {view === "list" && !loading && (
-            <p className="text-gray-500 text-sm mb-4">{notes.length}개의 글</p>
-          )}
+      {/* ── Page Header Bar ── */}
+      <div
+        className="relative z-10 pt-16"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+      >
+        <div className="w-full max-w-6xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">💭 나의 생각</h1>
+            {view === "list" && !loading && (
+              <p className="text-gray-500 text-sm mt-0.5">{notes.length}개의 글</p>
+            )}
+            {view === "edit" && (
+              <p className="text-gray-500 text-sm mt-0.5">글 편집 중</p>
+            )}
+          </div>
           {view === "list" && (
-            <div className="flex gap-2 justify-center mt-4">
-              <button
-                onClick={newNote}
-                style={{
-                  background: "linear-gradient(135deg,#7c3aed,#db2777)",
-                  minHeight: 44,
-                  touchAction: "manipulation",
-                }}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95 hover:scale-105"
-              >
-                + 새 글 작성
-              </button>
-            </div>
+            <button
+              onClick={newNote}
+              style={{
+                background: "linear-gradient(135deg,#7c3aed,#db2777)",
+                minHeight: 40,
+                touchAction: "manipulation",
+                flexShrink: 0,
+              }}
+              className="px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95"
+            >
+              + 새 글 작성
+            </button>
           )}
         </div>
+      </div>
 
-        {/* ── Centered content ── */}
-        <div className="w-full max-w-4xl">
+      {/* ── Content ── */}
+      <div className="relative z-10 pb-16">
+        <div className="w-full max-w-4xl mx-auto px-6 pt-6">
 
         {loading ? (
           <div className="flex items-center justify-center py-32">

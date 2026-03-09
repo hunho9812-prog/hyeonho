@@ -207,21 +207,29 @@ export default function TimetablePage() {
       <Background />
       <Navigation />
 
-      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
-
-        {/* ── Centered header ── */}
-        <div className="text-center mb-8 w-full max-w-2xl">
-          <h1 className="text-5xl font-bold text-white mb-3">📅 시간표</h1>
-          <p className="text-gray-400 text-sm">빈 칸을 클릭해서 수업을 추가하세요</p>
+      {/* ── Page Header Bar ── */}
+      <div
+        className="relative z-10 pt-16"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+      >
+        <div className="w-full max-w-6xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">📅 시간표</h1>
+            <p className="text-gray-500 text-sm mt-0.5">빈 칸을 클릭해서 수업을 추가하세요</p>
+          </div>
         </div>
+      </div>
+
+      {/* ── Content ── */}
+      <div className="relative z-10 pb-16">
+        <div className="w-full max-w-6xl mx-auto px-6 pt-6">
 
         {loading ? (
           <div className="flex items-center justify-center py-32">
             <div className="text-gray-500 text-sm">불러오는 중...</div>
           </div>
         ) : (
-        /* ── Centered timetable ── */
-        <div className="w-full max-w-6xl">
+        <div className="w-full">
         <div
           className="rounded-2xl overflow-hidden overflow-x-auto"
           style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(10,10,15,0.6)" }}
@@ -379,6 +387,7 @@ export default function TimetablePage() {
         </div>
         </div>
         )}
+        </div>
       </div>
 
       {/* Modal */}

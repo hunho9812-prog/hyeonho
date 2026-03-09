@@ -26,14 +26,14 @@ export default function Navigation() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300"
       style={{
         background: scrolled ? "rgba(10, 10, 15, 0.92)" : "rgba(10,10,15,0.75)",
         backdropFilter: "blur(16px)",
         borderBottom: "1px solid rgba(255,255,255,0.07)",
       }}
     >
-      <div className="w-full px-6 py-2.5 flex items-center justify-between gap-4">
+      <div className="h-full px-6 flex items-center justify-between gap-4">
 
         {/* 왼쪽: 브랜드 + 퀵링크 */}
         <div className="flex items-center gap-3 min-w-0">
