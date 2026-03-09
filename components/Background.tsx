@@ -21,7 +21,7 @@ export default function Background() {
           background: "radial-gradient(circle, #059669 0%, transparent 70%)",
         }}
       />
-      {/* Grid pattern */}
+      {/* Grid pattern — masked at top to hide behind header area */}
       <div
         className="absolute inset-0 opacity-[0.02]"
         style={{
@@ -30,6 +30,8 @@ export default function Background() {
             linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
           `,
           backgroundSize: "60px 60px",
+          maskImage: "linear-gradient(to bottom, transparent 0px, transparent 120px, black 160px)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0px, transparent 120px, black 160px)",
         }}
       />
     </div>
