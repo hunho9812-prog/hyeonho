@@ -159,12 +159,14 @@ export default function CalendarPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
+      <div className="h-16" />
+
       {/* ── Page Header Bar ── */}
       <div
-        className="relative z-10 pt-16"
+        className="relative z-10"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
       >
-        <div className="w-full max-w-6xl mx-auto px-6 py-5 flex items-center justify-between gap-4 flex-wrap">
+        <div className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl font-bold text-white">📆 달력</h1>
             <p className="text-gray-500 text-sm mt-0.5">월별 캘린더로 일정을 확인하고 날짜별 메모를 기록하세요</p>
@@ -189,7 +191,7 @@ export default function CalendarPage() {
 
       {/* ── Content ── */}
       <div className="relative z-10 pb-16">
-        <div className="w-full max-w-6xl mx-auto px-6 pt-6">
+        <div className="w-full max-w-6xl mx-auto px-6 pt-8">
 
         {loading ? (
           <div className="flex items-center justify-center py-32">

@@ -171,12 +171,14 @@ export default function TodoPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
+      <div className="h-16" />
+
       {/* ── Page Header Bar ── */}
       <div
-        className="relative z-10 pt-16"
+        className="relative z-10"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
       >
-        <div className="w-full max-w-6xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+        <div className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between gap-4">
           <h1 className="text-2xl font-bold text-white">✅ TO DO LIST</h1>
           {/* Date navigator */}
           <div className="flex items-center gap-1.5">
@@ -208,7 +210,7 @@ export default function TodoPage() {
 
       {/* ── Content ── */}
       <div className="relative z-10 pb-16">
-        <div className="w-full max-w-6xl mx-auto px-6 pt-6">
+        <div className="w-full max-w-6xl mx-auto px-6 pt-8">
 
         {loading ? (
           <div className="flex items-center justify-center py-32">

@@ -162,12 +162,15 @@ export default function ThoughtsPage() {
       <Background />
       <Navigation />
 
+      {/* nav spacer — fixed nav는 문서 흐름에서 제외되므로 동일 높이 spacer로 보정 */}
+      <div className="h-16" />
+
       {/* ── Page Header Bar ── */}
       <div
-        className="relative z-10 pt-16"
+        className="relative z-10"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
       >
-        <div className="w-full max-w-4xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+        <div className="w-full max-w-4xl mx-auto px-6 py-6 flex items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white">💭 나의 생각</h1>
             {view === "list" && !loading && (
@@ -196,7 +199,7 @@ export default function ThoughtsPage() {
 
       {/* ── Content ── */}
       <div className="relative z-10 pb-16">
-        <div className="w-full max-w-4xl mx-auto px-6 pt-6">
+        <div className="w-full max-w-4xl mx-auto px-6 pt-8">
 
           {loading ? (
             <div className="flex items-center justify-center py-32">
