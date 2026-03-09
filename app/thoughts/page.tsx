@@ -144,7 +144,7 @@ export default function ThoughtsPage() {
     <main className="relative min-h-screen">
       <Background />
       <Navigation />
-      <div className="relative z-10 flex flex-col items-center px-4 pt-24 pb-16">
+      <div className="relative z-10 flex flex-col items-center px-4 pt-28 pb-16">
 
         {/* ── Centered header ── */}
         <div className="text-center mb-8 w-full max-w-2xl">
