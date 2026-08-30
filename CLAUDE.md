@@ -1,3 +1,9 @@
+# 역할 및 이름
+
+너의 역할은 김현호의 삶을 향상시킬 수 있게 사이트
+제작을 도와주는 AI 에이전트야
+이름은 호랑으로 하자
+
 # 현호의 비밀공간
 
 김현호(중앙대 에너지시스템공학부 재학생) 개인 사이트. 원래는 자기소개 포트폴리오였다가, 학업/일상 관리 도구 모음("현호의 비밀공간")으로 전환됨.
@@ -9,7 +15,7 @@
 - 현호가 명시적으로 요청한 기능/수정은 그대로 충실히 구현한다.
 - 동시에, 학업·시간 관리·기록·습관처럼 실제 삶의 질에 도움이 될 만한 작은 기능을 스스로 제안하고 다듬어도 좋다 (예: 기존 시간표/달력/TODO/생각 기록 기능의 개선, 새로운 소기능 추가).
 - 과한 스코프 확장은 피한다 — 요청 작업을 항상 우선 완료하고, 제안은 곁들이는 정도로.
-- 개인용 사이트이므로 로그인/인증/멀티유저 기능은 불필요하다. 데이터는 Supabase에 저장하고, 여러 기기(PC/노트북/폰)에서 실시간으로 동기화되는 현재 구조를 유지한다 (아래 참고).
+- 데이터는 Supabase에 저장하고, 여러 기기(PC/노트북/폰)에서 실시간으로 동기화되는 현재 구조를 유지한다 (아래 참고).
 
 ## 브랜치 상태 (중요)
 
@@ -47,6 +53,17 @@
   3. 사용자 조작 시 `insert` / `update` / `upsert` / `delete`를 Supabase에 직접 호출 (로컬 state는 realtime 구독이 갱신해주므로 낙관적 업데이트를 과하게 하지 않는 편)
 - 새 기능에서 영속 데이터가 필요하면 이 패턴(Supabase 테이블 + realtime 구독)을 그대로 따른다. `localStorage`를 새로 도입하지 않는다.
 
+## 접근 제어: 비밀번호 게이트
+
+개인 전용 사이트라 로그인/회원 시스템은 없지만, 현호 본인만 접근 가능하도록 단일 비밀번호 게이트를 둔다 (멀티유저 인증이 아님).
+
+- `proxy.ts` (Next.js 16의 `middleware.ts` 후속 컨벤션, 항상 Node.js 런타임에서 실행) — 모든 경로를 가드 (`/login`, `/api/login`, 정적 자산 제외). `SITE_PASSWORD` 환경변수가 없으면 게이트 없이 통과 (로컬 개발 편의).
+- `lib/auth.ts` — 비밀번호를 그대로 쿠키에 넣지 않고 SHA-256 해시로 비교 (`crypto.subtle`, Edge/Node 런타임 모두 호환).
+- `app/api/login/route.ts` — 비밀번호 검증 후 httpOnly 쿠키(`hyeonho_auth`) 설정. `app/api/logout/route.ts` — 쿠키 삭제.
+- `app/login/page.tsx` — 비밀번호 입력 폼 (디자인 시스템 톤 유지: glass-card + gradient-text).
+- `Navigation.tsx`의 🔒 버튼으로 로그아웃 가능.
+- 환경변수 `SITE_PASSWORD`는 로컬 `.env.local`과 Vercel 양쪽에 설정해야 배포본에도 게이트가 적용된다 (`env.local.example` 참고).
+
 ## 디렉토리 구조
 
 ```
@@ -80,6 +97,9 @@ supabase/schema.sql   # DB 스키마 (테이블 + RLS + realtime publication) �
 4. `components/Navigation.tsx`의 `quickLinks` 배열에 새 페이지를 추가해야 실제로 내비게이션에서 접근 가능해진다.
 5. 홈 화면에 카드로 노출하고 싶으면 `components/Features.tsx`의 `features` 배열에 항목을 추가한다 (emoji, title, description, tags, href, gradient).
 
+해당 내용은 언제든지 변경할 수 있다. 변경한다면 그대로 허용한다.
+
+
 ## 디자인 시스템
 
 다크 테마 + 글래스모피즘. 새 UI는 아래 톤을 그대로 유지한다.
@@ -91,6 +111,8 @@ supabase/schema.sql   # DB 스키마 (테이블 + RLS + realtime publication) �
 - 레이아웃/간격/반응형은 Tailwind 유틸리티 클래스로, 색상/그라디언트/투명도 같은 세부 스타일은 인라인 `style={{}}`로 주는 것이 이 코드베이스의 관례 (완전히 Tailwind만 쓰거나 완전히 CSS 파일만 쓰지 않음)
 - 모든 UI 텍스트는 한국어
 - 우측 상단 `SyncStatus`가 Supabase 연결 상태(확인 중/동기화 중/오류)를 항상 표시함 — 새 페이지에도 `Navigation`을 넣으면 자동으로 포함됨
+
+만약 디자인 시스템을 변경하게 된다면 그냥 허용한다. 
 
 ## 기타 관례
 

@@ -121,6 +121,26 @@ export default function Navigation() {
 
           {/* 동기화 상태 — 버튼 오른쪽에 작게 */}
           <SyncStatus />
+
+          <button
+            onClick={async () => {
+              await fetch("/api/logout", { method: "POST" });
+              window.location.href = "/login";
+            }}
+            title="로그아웃"
+            className="flex items-center justify-center rounded-lg transition-all hover:scale-105 active:scale-95"
+            style={{
+              width: "36px",
+              height: "36px",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              color: "#e2e8f0",
+              fontSize: "14px",
+              flexShrink: 0,
+            }}
+          >
+            🔒
+          </button>
         </div>
       </div>
     </nav>
