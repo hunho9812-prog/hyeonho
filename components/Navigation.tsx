@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import SyncStatus from "@/components/SyncStatus";
 
 const quickLinks = [
-  { href: "/timetable", emoji: "📅", label: "시간표" },
+  { href: "/assets", emoji: "💰", label: "자산 관리" },
   { href: "/calendar", emoji: "📆", label: "달력" },
   { href: "/todo", emoji: "✅", label: "TO DO" },
   { href: "/thoughts", emoji: "💭", label: "생각" },

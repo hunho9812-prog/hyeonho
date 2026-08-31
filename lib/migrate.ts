@@ -34,17 +34,6 @@ interface CalendarEvent {
   color: string;
 }
 
-interface ClassItem {
-  id: number;
-  name: string;
-  professor: string;
-  room: string;
-  day: number;
-  startTime: string;
-  endTime: string;
-  colorIndex: number;
-}
-
 interface Note {
   id: number;
   title: string;
@@ -159,39 +148,6 @@ export async function migrateCalendar(): Promise<void> {
   }
 
   localStorage.removeItem("hyeonho-calendar-v1");
-}
-
-// ─── Timetable 마이그레이션 ─────────────────────────────────
-export async function migrateTimetable(): Promise<void> {
-  const raw = localStorage.getItem("hyeonho-timetable-v3");
-  if (!raw) return;
-
-  let classes: ClassItem[];
-  try {
-    classes = JSON.parse(raw);
-  } catch {
-    localStorage.removeItem("hyeonho-timetable-v3");
-    return;
-  }
-
-  if (classes.length > 0) {
-    const { error } = await supabase.from("timetable").upsert(
-      classes.map((c) => ({
-        id: c.id,
-        name: c.name,
-        professor: c.professor,
-        room: c.room,
-        day: c.day,
-        start_time: c.startTime,
-        end_time: c.endTime,
-        color_index: c.colorIndex,
-      })),
-      { onConflict: "id" }
-    );
-    if (error) return; // 실패 시 localStorage 보존
-  }
-
-  localStorage.removeItem("hyeonho-timetable-v3");
 }
 
 // ─── Thoughts 마이그레이션 ──────────────────────────────────

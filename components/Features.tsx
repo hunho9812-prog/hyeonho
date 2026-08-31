@@ -22,12 +22,12 @@ interface SiteLink {
 
 const features: FeatureCard[] = [
   {
-    emoji: "📅",
-    title: "수업 시간표",
-    description:
-      "주간 시간표를 만들고 수업을 블록으로 입력하세요. 클릭 한 번으로 수업을 추가·수정할 수 있습니다.",
-    tags: ["시간 관리", "학사 일정"],
-    href: "/timetable",
+    emoji: "💰",
+    title: "자산 관리",
+    description: "자산 현황을 기록하고 관리하는 공간입니다. 상세 기능은 준비 중입니다.",
+    tags: ["자산 관리"],
+    href: "/assets",
+    comingSoon: true,
     gradient: { from: "#7c3aed", to: "#2563eb", accent: "rgba(124,58,237,0.25)" },
   },
   {
